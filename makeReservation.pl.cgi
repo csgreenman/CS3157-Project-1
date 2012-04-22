@@ -11,14 +11,18 @@ use DBD::SQLite;
 
 our @hairorsalon = qw(Hair Salon);
 our @hairappointmenttypes = qw(Cut Color Perm Trim Blowout);
+our %hairtypehash = map{$_ => 1} @hairappointmenttypes;
 our @salonappointmenttypes = qw(Manicure Pedicure ManiPediCombo Spa Facial);
+our %salontypehash = map{$_ => 1} @salonappointmenttypes;
 our @weekday = qw(Sunday Monday Tuesday Wednesday Thursday Friday Saturday);
 our @hairstylists = qw(Amy Beth Catherine Diana Evelyn);
 our @salonworkers = qw(Fiona Gina Hannah Irene Jeanne);
 
 my $dbfile = "salon.db";
 my $dbh = DBI->connect("DBI:SQLite:dbname=$dbfile","","");
-my @days;
+#my @days;
+#my @apptdays;
+#my @appttimes;
 
 print "content-type: text/html \n\n";
 
@@ -38,7 +42,12 @@ my @in = split('&',$in);
 
 our $user = "";
 my $command = "";
-my $type = "";
+my $type = param('AppointmentType');
+my $subtype = param('Type');
+my $date = param('Day');
+my $time = param('Time');
+$time =~ s/\%([A-Fa-f0-9]{2})/pack('C', hex($1))/seg;
+my $stylist = param('Person');
 
 my @value = split('=',$in[0]);
 
@@ -46,11 +55,11 @@ if ($value[0] eq "user"){
     $user = $value[1];
     my @value = split('=',$in[1]);
     $command = $value[0];
-    $type = $value[1];
+    #$type = $value[1];
 }
 else{
     $command = $value[0];
-    $type = $value[1];
+    #$type = $value[1];
     @value = split('=',$in[1]);
     $user = $value[1];
 }
@@ -59,28 +68,29 @@ if ($command eq "res"){
 	&startReservation;
 }
 elsif ($command eq "AppointmentType"){	
-	&AppointmentType;
+    &AppointmentType;
 }
 elsif ($command eq "Type"){	
-	&pickDay;
+    &pickDay;
 }
 elsif ($command eq "Day"){	
-	&pickTime;
+    &pickTime;
 }
 elsif ($command eq "Time"){
-	&pickPerson;
+    &pickPerson;
 }
 elsif ($command eq "Person"){
+    &createAppointment;
 
-	my $string = $ENV{REMOTE_ADDR} . " made a new reservation as user \"" . $user . "\" at " . localtime;
-	&log($string);
-
-	print "<html><body><center>";
-	print "Congrats, appointment has been made!";	
-	print "<form name=\"MyForm\" method=GET action=\"home.pl.cgi\">";
-	print "<input type=\"hidden\" name=\"user\" value=\"$user\">";
-	print "<input type=\"submit\" value=\"Home\"></form>";
-	print "</center></body></html>";
+    my $string = $ENV{REMOTE_ADDR} . " made a new reservation as user \"" . $user . "\" at " . localtime;
+    &log($string);
+    
+    print "<html><body><center>";
+    print "Congrats, appointment has been made!";	
+    print "<form name=\"MyForm\" method=GET action=\"home.pl.cgi\">";
+    print "<input type=\"hidden\" name=\"user\" value=\"$user\">";
+    print "<input type=\"submit\" value=\"Home\"></form>";
+    print "</center></body></html>";
 }
 else{
 	print "ERROR, command is $command and type is $type\n";
@@ -104,99 +114,168 @@ sub startReservation{
 }
 
 sub AppointmentType{
-	print "<html><body><center>";
-	print "What specific type of appointment would you like to make?";
-	print "<form action=\"makeReservation.pl.cgi\" method=GET>";
-	print "<select name=\"Type\" action=\"makeReservation.pl.cgi\" method=GET>";
-	if($type eq "Hair") {
-	    foreach(@hairappointmenttypes) {
-		print "<option value=$_>$_";
-	    }
+    #$type = param('AppointmentType');
+    print "<html><body><center>";
+    print "What specific type of appointment would you like to make?";
+    print "<form action=\"makeReservation.pl.cgi\" method=GET>";
+    print "<select name=\"Type\" action=\"makeReservation.pl.cgi\" method=GET>";
+    if($type eq "Hair") {
+	foreach(@hairappointmenttypes) {
+	    print "<option value=$_>$_";
 	}
-	elsif($type eq "Salon") {
-	    foreach(@salonappointmenttypes) {
-		print "<option value=$_>$_";
-	    }
+    }
+    elsif($type eq "Salon") {
+	foreach(@salonappointmenttypes) {
+	    print "<option value=$_>$_";
 	}
-	print "</select>";
-	print "<input type=\"hidden\" value=$user name=\"user\">";
-	print "<input type=\"submit\" value=\"Submit\"></form>";
-	print "</html></body></center>";
+    }
+
+    print "</select>";
+    print "<input type=\"hidden\" value=$user name=\"user\">";
+    print "<input type=\"submit\" value=\"Submit\"></form>";
+    print "</html></body></center>";
+	
 }
 
 sub pickDay{
-    my $i = 0;
-    my $sth = $dbh->prepare("SELECT date FROM available_appt");
-    $sth->execute();
-    while(my @result = $sth->fetchrow_array()) {
-	$days[$i] = $result[0];	
-	++$i;
-    }
-
-    $size = @days;
-    for($j = 0; $j < $size-1; $j++) {
-	for($k = $j+1; $k < $size; $k++) {
-	    if($days[$j] eq $days[$k]) {	
-		splice @days, $j, 1;
-	    }
+    #$subtype = param('Type');
+    if (exists $hairtypehash{$subtype}) {
+	my $i = 0;
+	my $sth = $dbh->prepare("SELECT date FROM hair_availability");
+	$sth->execute();
+	while(my @result = $sth->fetchrow_array()) {
+	    $days[$i] = $result[0];	
+	    ++$i;
 	}
+	my %hash = map{$_ => 1 } @days;
+	@apptdays = keys %hash;
     }
-
-   for($j = 0; $j < $size-1; $j++) {
-	for($k = $j+1; $k < $size; $k++) {
- 	    if($days[$j] eq $days[$k]) {
-		splice @days, $j, 1;
-	    }
+    elsif (exists $salontypehash{$subtype}) {
+	my $i = 0;
+	my $sth = $dbh->prepare("SELECT date FROM salon_availability");
+	$sth->execute();
+	while(my @result = $sth->fetchrow_array()) {
+	    $days[$i] = $result[0];
+	    ++$i;
 	}
+	my %hash = map{$_ => 1 } @days;
+	@apptdays = keys %hash;
     }
-    
     print "<html><body><center>";
     print "What day would you like to make your appointment?\n";
     print "<form action=\"makeReservation.pl.cgi\" method=GET>";
     print "<action=\"makeReservation.pl.cgi\" method=GET>";
-    foreach (@days){
+    foreach (@apptdays){
 	print "<input type=\"radio\" name=\"Day\" value=$_>$_<br/>";
     }
     print "<input type=\"hidden\" value=$user name=\"user\">";
+    print "<input type=\"hidden\" value=$subtype name=\"Type\">";
     print "<input type=\"submit\" value=\"Submit\"></form>";
     print "</html></body></center>";
 }
 
 sub pickTime{
-	print "<html><body><center>";
-	print "What time would you like to make your appointment?\n";
-	print "<form action=\"makeReservation.pl.cgi\" method=GET>";
-	print "<action=\"makeReservation.pl.cgi\" method=GET>";
-	foreach (@inp){
-		if ($_ ne "done" && $_ ne "&user" && $_ ne "reservation"){
-
-			$_ =~ s/\%3A/:/;
-			print "<input type=\"radio\" name=\"Time\" value=$_>$_<br/>";
-		}	
+    my @times;
+    my $j = 0;
+    print "<html><body><center>";
+    print "What time would you like to make your appointment?\n";
+    print "<form action=\"makeReservation.pl.cgi\" method=GET>";
+    print "<action=\"makeReservation.pl.cgi\" method=GET>";
+    if(exists $hairtypehash{$subtype}) {
+	my $sth = $dbh->prepare("SELECT time FROM hair_availability WHERE date=?");
+	$sth->execute($date);
+	while(my @result = $sth->fetchrow_array()) {
+	    $times[$j] = $result[0];
+	    ++$j;
 	}
-	print "<input type=\"hidden\" value=$user name=\"user\">";
-	print "<input type=\"submit\" value=\"Submit\"></form>";
-	print "</html></body></center>";
+    }
+    elsif(exists $salontypehash{$subtype}) {
+	my $sth = $dbh->prepare("SELECT time FROM salon_availability WHERE date=?");
+	$sth->execute($date);
+	while(my @result = $sth->fetchrow_array()) {
+	    $times[$j] = $result[0];
+	    ++$j;
+	}
+    }
+
+    my %timehash = map{$_ => 1} @times;
+    @appttimes = keys %timehash;
+    foreach (@appttimes){
+	print "<input type=\"radio\" name=\"Time\" value=$_>$_<br/>";	
+    }
+    print "<input type=\"hidden\" value=$user name=\"user\">";
+    print "<input type = \"hidden\" value=$subtype name = \"Type\">";
+    print "<input type = \"hidden\" value = $date name = \"Day\">";
+    print "<input type=\"submit\" value=\"Submit\"></form>";
+    print "</html></body></center>";
 }
 
 sub pickPerson{
-	print "<html><body><center>";
-	print "Do you have a specific stylist that you would like?";
-	print "<form action=\"makeReservation.pl.cgi\" method=POST>";
-	print "<select name=\"Person\" action=\"clienttest.pl.cgi\" method=POST>";
-	foreach (@inp){
-		if ($_ ne "done" && $_ ne "&user" && $_ ne "reservation"){
-			print "<option value=$_>$_";
-		}
+    my @stylists;
+    my $k=0;
+    print "<html><body><center>";
+    print "Do you have a specific stylist that you would like?";
+    print "<form action=\"makeReservation.pl.cgi\" method=GET>";
+    print "<select name=\"Person\" action=\"makeReservation.pl.cgi\" method=GET>";
+    if (exists $hairtypehash{$subtype}) {
+	my $sth = $dbh->prepare("SELECT stylist FROM hair_availability WHERE date=? AND time=?");
+	$sth->execute($date, $time);
+	while(my @result = $sth->fetchrow_array()) {
+	    $stylists[$k] = $result[0];
+	    ++$k;
 	}
-	print "</select>";
-	print "<input type=\"hidden\" value=$user name=\"user\">";
-	print "<input type=\"submit\" value=\"Submit\"></form>";
-	print "</html></body></center>";
+    }
+    elsif (exists $salontypehash{$subtype}) {
+	my $sth = $dbh->prepare("SELECT stylist FROM salon_availability WHERE date=? AND time=?");
+	$sth->execute($date, $time);
+	while(my @result = $sth->fetchrow_array()) {
+	    $stylists[$k] = $result[0];
+	    ++$k;
+	}
+    }
+    my %stylisthash = map{$_ => 1} @stylists;
+    @stylists = keys %stylisthash;
+    my $a = 0;
+    my @stylistnames;
+
+
+    foreach (@stylists) {
+	my $sth1 = $dbh->prepare("SELECT name FROM stylist WHERE id=?");
+	$sth1->execute($_);
+	my ($name) = $sth1->fetchrow_array();
+	$stylistnames[$a] = $name;
+	++$a;
+    }
+
+    foreach (@stylistnames){
+	print "<option value=$_>$_";
+    }
+    print "</select>";
+    print "<input type=\"hidden\" value=$user name=\"user\">";
+    print "<input type=\"hidden\" value=$subtype name=\"Type\">";
+    print "<input type=\"hidden\" value=$date name=\"Day\">";
+    print "<input type=\"hidden\" value=$time name=\"Time\">";
+    print "<input type=\"submit\" value=\"Submit\"></form>";
+    print "</html></body></center>";
 }
 
 sub createAppointment {
-    #$dbh->do("INSERT INTO appointment VALUES(
+    my $sth = $dbh->prepare("SELECT id FROM client WHERE username=?");
+    $sth->execute("$user");
+    my ($id) = $sth->fetchrow_array();
+    my $sth2 = $dbh->prepare("SELECT id FROM stylist WHERE name=?");
+    $sth2->execute("$stylist");
+    my ($stylistid) = $sth2->fetchrow_array();
+    my $sth3 = $dbh->prepare("INSERT INTO appointment VALUES(NULL, ?, ?, ?, ?, ?)");
+    $sth3->execute($id, $date, $time, "$subtype", $stylistid);
+    if (exists $hairtypehash{$subtype}) {
+	my $sth1 = $dbh->prepare("DELETE FROM hair_availability WHERE date=? AND time=? AND stylist=?");
+	$sth1->execute($date, $time, $stylistid);
+    }
+    elsif (exists $salontypehash{$subtype}) {
+	my $sth1 = $dbh->prepare("DELETE FROM salon_availability WHERE date=? AND time=? AND stylist=?");
+	$sth1->execute($date, $time, $stylistid);
+    }
 }
 
 sub log{

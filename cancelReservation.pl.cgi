@@ -18,6 +18,11 @@ my $namestring = join(",", @names);
 my $user = param('user');
 my $cancel = param('apt');
 
+our @hairappointmenttypes = qw(Cut Color Perm Trim Blowout);
+our %hairtypehash = map{$_ => 1} @hairappointmenttypes;
+our @salonappointmenttypes = qw(Manicure Pedicure ManiPediCombo Spa Facial);
+our %salontypehash = map{$_ => 1} @salonappointmenttypes;
+
 # two cgi scripts redirect to cancelReservation:
 # home.pl.cgi uses the GET method, and clienttest.pl.cgi uses POST
 
@@ -68,20 +73,23 @@ sub seeAppointments{
     $sth->execute("$user");
     my ($username) = $sth->fetchrow_array();
     $sth->finish;
-    my $sth = $dbh->prepare("SELECT startTime, type, stylist FROM appointment WHERE client=?") or die "$!";
+    my $sth = $dbh->prepare("SELECT date, time, type, stylist FROM appointment WHERE client=?") or die "$!";
     $sth->execute($username);
     while (my @result = $sth->fetchrow_array()) {
-	my $typeid = $result[1];
-	my $stylistid = $result[2];
-	my $sth1 = $dbh->prepare("SELECT name FROM appttype WHERE id=?") or die "Line 90 $!";
-	$sth1->execute($typeid);
-	my ($result) = $sth1->fetchrow_array();
-	my $appttype = $result;
+	my $date = $result[0];
+	my $time = $result[1];
+	#$time = s/\%([A-Fa-f0-9]{2})/pack('C', hex($1))/seg;
+	my $type = $result[2];
+	my $stylistid = $result[3];
+	#my $sth1 = $dbh->prepare("SELECT name FROM appttype WHERE id=?") or die "Line 90 $!";
+	#$sth1->execute($typeid);
+	#my ($result) = $sth1->fetchrow_array();
+	#my $appttype = $result;
 	my $sth2 = $dbh->prepare("SELECT name FROM stylist WHERE id=?") or die "$!";
 	$sth2->execute("$stylistid");
 	my ($result) = $sth2->fetchrow_array();
 	my $stylistname = $result;
-	$appointmentstring=$result[0]." ".$appttype." ".$stylistname."\n";
+	$appointmentstring=$date." at ".$time." ".$type." with ".$stylistname."\n";
 	$appointments[$i] = $appointmentstring;
 	++$i;
     }
@@ -102,18 +110,35 @@ sub seeAppointments{
 
 sub cancel {
     print "<html><body><center>";
-    @cancel = split(/ /, $cancel);
-    $start = $cancel[0]." ".$cancel[1];
+    @init = split(/&/, $cancel);
+    @cancel = split(/ /, $init[0]);
+    $date = $cancel[0];
+    $time = $cancel[2];
+    $type = $cancel[3];
+    $stylist = $cancel[5];
+    print "Stylist: ", $stylist, "<br>";
+    #$stylist =~ s/\%([A-Fa-f0-9]{2})/pack('C', hex($1))/seg;
+    my $sth2 = $dbh->prepare("SELECT id FROM stylist WHERE name=?");
+    $sth2->execute("$stylist");
+    my ($stylistid) = $sth2->fetchrow_array();
+    print "ID: ", $stylistid, "<br>";
     my $sth = $dbh->prepare("SELECT id FROM client WHERE username=?");
     $sth->execute("$user");
     my ($uid) = $sth->fetchrow_array();
     $sth->finish;
-    my $sth1 = $dbh->prepare("DELETE FROM appointment WHERE client=? AND startTime=?");
-    $sth1->execute($uid, "$start");
+    my $sth1 = $dbh->prepare("DELETE FROM appointment WHERE client=? AND date=? AND time=?");
+    $sth1->execute($uid, $date, $time);
     $sth1->finish;
-    
+    if (exists $hairtypehash{$type}) {
+	my $sth3 = $dbh->prepare("INSERT INTO hair_availability VALUES(NULL, ?, ?, ?)");
+	$sth3->execute($date, $time, $stylistid);
+    }
+    elsif (exists $salontypehash{$type}) {
+	my $sth3 = $dbh->prepare("INSERT INTO salon_availability VALUES(NULL, ?, ?, ?)");
+	$sth3->execute($date, $time, $stylistid);
+    }
     print "Appointment successfully canceled! <br>";
-    $dbh->do("DELETE FROM appointment WHERE client=$uid AND startTime=\"$start\"");
+    #$dbh->do("DELETE FROM appointment WHERE client=$uid AND startTime=\"$start\"");
     print "</html></body></center>";
 }
 
