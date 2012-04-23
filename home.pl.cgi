@@ -93,6 +93,8 @@ sub loggedIn{
 	print "<form action=\"resetPassword.pl.cgi\" method=POST>";
 	print "<input type=\"hidden\" value=$user name=\"user\">";
 	print "<input type=\"submit\" name=\"changepass\" value=\"Change Password\" class=\"button\"></form>";
+	print "<form action=\"test.html\">";
+	print "<input type=\"submit\" name=\"logout\" value=\"Logout\" class=\"button\"></form>";
 	print "<style type=\"text/css\">";
 	print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
 	print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
@@ -109,6 +111,8 @@ sub admin{
 	print "<form action=\"resetPassword.pl.cgi\" method=POST>";
 	print "<input type=\"hidden\" value=$user name=\"user\">";
 	print "<input type=\"submit\" name=\"changepass\" value=\"Change Password\" class=\"button\"></form>";
+	print "<form action=\"test.html\">";
+	print "<input type=\"submit\" name=\"logout\" value=\"Logout\" class=\"button\"></form>";
 	print "<style type=\"text/css\">";
 	print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
 	print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
