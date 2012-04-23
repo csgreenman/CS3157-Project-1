@@ -8,6 +8,7 @@ use Digest::MD5 qw(md5 md5_hex md5_base64);
 use CGI 'param';
 use DBI;
 use DBD::SQLite;
+use strict;
 
 our @hairorsalon = qw(Hair Salon);
 our @hairappointmenttypes = qw(Cut Color Perm Trim Blowout);
@@ -20,9 +21,10 @@ our @salonworkers = qw(Fiona Gina Hannah Irene Jeanne);
 
 my $dbfile = "salon.db";
 my $dbh = DBI->connect("DBI:SQLite:dbname=$dbfile","","");
-#my @days;
-#my @apptdays;
-#my @appttimes;
+my @days;
+my @apptdays;
+my @appttimes;
+our $in;
 
 print "content-type: text/html \n\n";
 
@@ -101,7 +103,6 @@ elsif ($command eq "Person"){
 else{
 	print "ERROR, command is $command and type is $type\n";
 	print "in is $in";
-	print "c is $c";
 }
 
 sub startReservation{
@@ -311,7 +312,7 @@ sub createAppointment {
 sub log{
 	my $string = shift;
 	open(FH, "activity.txt");
-	@file = <FH>;
+	my @file = <FH>;
 	push(@file,$string);
 	chomp(@file);
 		
