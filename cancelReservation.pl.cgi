@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -T
 
 #BEGIN { unshift @INC, "/home/csg2119/Perl_Modules/lib/perl/5.10.1" };
 
@@ -24,7 +24,7 @@ our @salonappointmenttypes = qw(Manicure Pedicure ManiPediCombo Spa Facial);
 our %salontypehash = map{$_ => 1} @salonappointmenttypes;
 
 # two cgi scripts redirect to cancelReservation:
-# home.pl.cgi uses the GET method, and clienttest.pl.cgi uses POST
+# home.pl.cgi uses the POST method, and clienttest.pl.cgi uses POST
 
 if ($cancel) { &cancel; }
 &seeAppointments;
@@ -54,13 +54,18 @@ else
 	&log($string);
 	
 	print "<html><body><center>";
-	print "Appointment cancelled!";	
-	print "<form name=\"MyForm\" method=GET action=\"home.pl.cgi\">";
+	print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>";
+	print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
+	print "Appointment cancelled!<br>";	
+	print "<form name=\"MyForm\" method=POST action=\"home.pl.cgi\">";
 	print "<input type=\"hidden\" name=\"user\" value=\"$user\">";
 	print "<input type=\"hidden\" name=\"user\" value=\"$user\">";
-	print "<input type=\"submit\" value=\"Home\"></form>";
-	print "</center></body></html>";
-    }
+	print "<input type=\"submit\" value=\"Home\" class=\"button\"></form>";
+	print "<style type=\"text/css\">";
+	print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+	print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+	print "</style></html></body></center>";
+	}
 }
 
 =cut
@@ -95,33 +100,42 @@ sub seeAppointments{
     }
 
     print "<html><body><center>";
+    print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>";
+    print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
     print "Here are your current appointments<br><br>";
     print "<form action=\"cancelReservation.pl.cgi\" method=GET>";
     print "<action=\"cancelReservation.pl.cgi\" method=GET>";
     foreach (@appointments){
 	print "<input type=\"radio\" name=\"apt\" value=\"$_\">$_<br/>";	
     }
-    print "<input type=\"hidden\" value=\"$user\" name=\"user\">";
-    print "<input type=\"submit\" value=\"Cancel\"></form>";
-    print "</html></body></center>";
+    print "<br><input type=\"hidden\" value=\"$user\" name=\"user\">";
+    print "<input type=\"submit\" value=\"Cancel\" class=\"button\"></form>";
+    print "<form name=\"MyForm\" method=POST action=\"home.pl.cgi\">";
+    print "<input type=\"hidden\" name=\"user\" value=\"$user\">";
+    print "<input type=\"hidden\" name=\"user\" value=\"$user\">";
+    print "<input type=\"submit\" value=\"Home\" class=\"button\"></form>";
+    print "<style type=\"text/css\">";
+    print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+    print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+    print "</style></html></body></center>";
 }
-
-
 
 sub cancel {
     print "<html><body><center>";
+    print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>";
+    print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
     @init = split(/&/, $cancel);
     @cancel = split(/ /, $init[0]);
     $date = $cancel[0];
     $time = $cancel[2];
     $type = $cancel[3];
     $stylist = $cancel[5];
-    print "Stylist: ", $stylist, "<br>";
+    #print "Stylist: ", $stylist, "<br>";
     #$stylist =~ s/\%([A-Fa-f0-9]{2})/pack('C', hex($1))/seg;
     my $sth2 = $dbh->prepare("SELECT id FROM stylist WHERE name=?");
     $sth2->execute("$stylist");
     my ($stylistid) = $sth2->fetchrow_array();
-    print "ID: ", $stylistid, "<br>";
+    #print "ID: ", $stylistid, "<br>";
     my $sth = $dbh->prepare("SELECT id FROM client WHERE username=?");
     $sth->execute("$user");
     my ($uid) = $sth->fetchrow_array();
@@ -138,6 +152,10 @@ sub cancel {
 	$sth3->execute($date, $time, $stylistid);
     }
     print "Appointment successfully canceled! <br>";
+	
+    my $string = $ENV{REMOTE_ADDR} . " cancelled a reservation as user \"" . $user . "\" at " . localtime;
+    &log($string);
+
     #$dbh->do("DELETE FROM appointment WHERE client=$uid AND startTime=\"$start\"");
     print "</html></body></center>";
 }
