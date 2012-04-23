@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -T
 
 #BEGIN { unshift @INC, "/home/csg2119/Perl_Modules/lib/perl/5.8.8" };
 
@@ -86,11 +86,17 @@ elsif ($command eq "Person"){
     &log($string);
     
     print "<html><body><center>";
+    print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>";
+    print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
     print "Congrats, appointment has been made!";	
-    print "<form name=\"MyForm\" method=GET action=\"home.pl.cgi\">";
+    print "<form name=\"MyForm\" method=POST action=\"home.pl.cgi\">";
     print "<input type=\"hidden\" name=\"user\" value=\"$user\">";
-    print "<input type=\"submit\" value=\"Home\"></form>";
-    print "</center></body></html>";
+    print "<input type=\"hidden\" name=\"user\" value=\"$user\">";
+    print "<input type=\"submit\" value=\"Home\" class=\"button\"></form>";
+    print "<style type=\"text/css\">";
+    print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+    print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+    print "</style></html></body></center>";
 }
 else{
 	print "ERROR, command is $command and type is $type\n";
@@ -101,6 +107,8 @@ else{
 sub startReservation{
 	@inp = qw(Hair Salon);
 	print "<html><body><center>";
+	print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>";
+	print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
 	print "What type of appointment would you like to make?";
 	print "<form action=\"makeReservation.pl.cgi\" method=GET>";
 	print "<select name=\"AppointmentType\" action=\"makeReservation.pl.cgi\" method=GET>";
@@ -109,13 +117,18 @@ sub startReservation{
 	}
 	print "</select>";
 	print "<input type=\"hidden\" value=$user name=\"user\">";
-	print "<input type=\"submit\" value=\"Submit\"></form>";
-	print "</html></body></center>";
+	print "<input type=\"submit\" value=\"Submit\" class=\"button\"></form>";
+	print "<style type=\"text/css\">";
+	print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+	print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+	print "</style></html></body></center>";
 }
 
 sub AppointmentType{
     #$type = param('AppointmentType');
     print "<html><body><center>";
+    print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>";
+    print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
     print "What specific type of appointment would you like to make?";
     print "<form action=\"makeReservation.pl.cgi\" method=GET>";
     print "<select name=\"Type\" action=\"makeReservation.pl.cgi\" method=GET>";
@@ -132,9 +145,11 @@ sub AppointmentType{
 
     print "</select>";
     print "<input type=\"hidden\" value=$user name=\"user\">";
-    print "<input type=\"submit\" value=\"Submit\"></form>";
-    print "</html></body></center>";
-	
+    print "<input type=\"submit\" value=\"Submit\" class=\"button\"></form>";
+    print "<style type=\"text/css\">";
+    print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+    print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+    print "</style></html></body></center>";
 }
 
 sub pickDay{
@@ -162,6 +177,8 @@ sub pickDay{
 	@apptdays = keys %hash;
     }
     print "<html><body><center>";
+    print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>";
+    print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
     print "What day would you like to make your appointment?\n";
     print "<form action=\"makeReservation.pl.cgi\" method=GET>";
     print "<action=\"makeReservation.pl.cgi\" method=GET>";
@@ -170,14 +187,19 @@ sub pickDay{
     }
     print "<input type=\"hidden\" value=$user name=\"user\">";
     print "<input type=\"hidden\" value=$subtype name=\"Type\">";
-    print "<input type=\"submit\" value=\"Submit\"></form>";
-    print "</html></body></center>";
+    print "<input type=\"submit\" value=\"Submit\" class=\"button\"></form>";
+    print "<style type=\"text/css\">";
+    print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+    print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+    print "</style></html></body></center>";
 }
 
 sub pickTime{
     my @times;
     my $j = 0;
     print "<html><body><center>";
+    print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>";
+    print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
     print "What time would you like to make your appointment?\n";
     print "<form action=\"makeReservation.pl.cgi\" method=GET>";
     print "<action=\"makeReservation.pl.cgi\" method=GET>";
@@ -206,14 +228,19 @@ sub pickTime{
     print "<input type=\"hidden\" value=$user name=\"user\">";
     print "<input type = \"hidden\" value=$subtype name = \"Type\">";
     print "<input type = \"hidden\" value = $date name = \"Day\">";
-    print "<input type=\"submit\" value=\"Submit\"></form>";
-    print "</html></body></center>";
+    print "<input type=\"submit\" value=\"Submit\" class=\"button\"></form>";
+    print "<style type=\"text/css\">";
+    print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+    print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+    print "</style></html></body></center>";
 }
 
 sub pickPerson{
     my @stylists;
     my $k=0;
     print "<html><body><center>";
+    print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>";
+    print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
     print "Do you have a specific stylist that you would like?";
     print "<form action=\"makeReservation.pl.cgi\" method=GET>";
     print "<select name=\"Person\" action=\"makeReservation.pl.cgi\" method=GET>";
@@ -255,8 +282,11 @@ sub pickPerson{
     print "<input type=\"hidden\" value=$subtype name=\"Type\">";
     print "<input type=\"hidden\" value=$date name=\"Day\">";
     print "<input type=\"hidden\" value=$time name=\"Time\">";
-    print "<input type=\"submit\" value=\"Submit\"></form>";
-    print "</html></body></center>";
+    print "<input type=\"submit\" value=\"Submit\" class=\"button\"></form>";
+    print "<style type=\"text/css\">";
+    print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+    print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+    print "</style></html></body></center>";
 }
 
 sub createAppointment {
