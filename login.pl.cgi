@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -T
 use Fcntl; #The Module
 use Digest::MD5 qw(md5 md5_hex md5_base64);
 use CGI 'param';
@@ -20,12 +20,18 @@ elsif ($ENV{CONTENT_LENGTH} > 0){
 
 # create a page that takes in user and password information and submits it through the POST method
 sub generateLoginHTML{
-    print "<html><body><center>";
-    print "<form action=\"login.pl.cgi\" method=POST>User: ";
-    print "<input type=\"text\" name=\"t1\"><br><br>Password: ";
-    print "<input type=\"password\" name=\"t2\"><br><br>";
-    print "<input type=\"submit\" value=\"Submit\"></form>";
-    print "</form></html></body></center>";
+	print "<html><body><center>";
+	print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>";
+	print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
+	print "<form action=\"login.pl.cgi\" method=POST>User: ";
+	print "<input type=\"text\" name=\"t1\" class=\"input\"><br><br>Password: ";
+	print "<input type=\"password\" name=\"t2\" class=\"input\"><br><br>";
+	print "<input type=\"submit\" value=\"Submit\" class=\"button\"></form>";
+	print "<style type=\"text/css\">";
+	print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+	print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+	print ".input {border: 1px solid #9372ED; background: #9372ED;}";
+	print "</form></style></html></body></center>";
 }
 
 # get the input submitted through the POST method and split it so that you get
@@ -64,11 +70,18 @@ sub checkPassword{
 	if ($boolean == 0){
 		$string = $ENV{REMOTE_ADDR} . " attempt login fail as user \"" . $user . "\" at " . localtime;
 		&log($string);
-		print "<html><body><center>Invalid username/password combination";
+		print "<html><body><center>";
+		print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>Invalid username/password combination";
+		print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
 		print "<form action=\"login.pl.cgi\" method=POST>";
-		print "<input type=\"submit\" value=\"Login\"></form>";
-		print "</html></body></center>";	
+		print "<input type=\"submit\" value=\"Login\" class=\"button\"></form>";
+		print "<style type=\"text/css\">";
+		print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+		print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+		print ".input {border: 1px solid #9372ED; background: #9372ED;}";
+		print "</style></html></body></center>";	
 	}
+
 	# if there is a match, direct them to the submitting URL form
 	elsif ($boolean == 1){
 		if ($user eq "admin"){
