@@ -25,23 +25,35 @@ elsif ($ENV{CONTENT_LENGTH} > 0){
 	&create;
 }
 else{
-	print "<html><body><center>New account created!";
+	print "<html><body><center>";
+	print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>New account created!";
+	print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
 	print "<form action=\"login.pl.cgi\" method=POST>";
-	print "<input type=\"submit\" value=\"Login\"></form>";
-	print "</html></body></center>";
+	print "<input type=\"submit\" value=\"Login\" class=\"button\"></form>";
+	print "<style type=\"text/css\">";
+	print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+	print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+	print "</style></html></body></center>";
 }
 
 # create a page that takes in user and password information and submits it through the POST method
 sub createNewAccount{
 	print "<html><body><center>";
+	print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>";
+	print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
 	print "<form action=\"createAccount.pl.cgi\" method=POST>New Username: ";
-	print "<input type=\"text\" name=\"t1\"><br><br>New Password: ";
-	print "<input type=\"password\" name=\"t2\"><br><br> Confirm Password: ";
-	print "<input type=\"password\" name=\"t3\"><br><br> Email: ";
-	print "<input type=\"text\" name=\"t4\"><br><br>First name:";
-	print "<input type=\"text\" name=\"t5\"><br><br>Last name:";
-	print "<input type=\"text\" name=\"t6\"><br><br>";   
-	print "<input type=\"submit\" value=\"Submit\"></form></html></body></center>";
+	print "<input type=\"text\" name=\"t1\" class=\"input\"><br><br>New Password: ";
+	print "<input type=\"password\" name=\"t2\" class=\"input\"><br><br> Confirm Password: ";
+	print "<input type=\"password\" name=\"t3\" class=\"input\"><br><br> Email: ";
+	print "<input type=\"text\" name=\"t4\" class=\"input\"><br><br>First name:";
+	print "<input type=\"text\" name=\"t5\" class=\"input\"><br><br>Last name:";
+	print "<input type=\"text\" name=\"t6\" class=\"input\"><br><br>";   
+	print "<input type=\"submit\" value=\"Submit\" class=\"button\"></form>";
+	print "<style type=\"text/css\">";
+	print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+	print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+	print ".input {border: 1px solid #9372ED; background: #9372ED;}";
+	print "</style></html></body></center>";
 }
 
 # get the input submitted through the POST method and split it so that you get
@@ -113,27 +125,40 @@ sub create{
 	    $newuserdata = "newuser" . "\*" . $user . " " . $email . " " . $firstname . " " . $lastname;	
 	    
 	    print "<html><body><center>";
+	    print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>";
+	    print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
 	    print "Account successfully created!<br>";
-	    print "Click <a href=\"login.pl.cgi\">here</a> to log in.";
-	    #print "<input type=\"hidden\" value=\"$newuserdata\" name=\"\"></form>";
-	    #print "<script type=\"text/javascript\" language=\"JavaScript\"><!--
-		#document.MyForm.submit();
-		#//--></script>";
-	    print "</html></body></center>";
+	    print "<form action=\"login.pl.cgi\" method=POST>";
+	    print "<input type=\"submit\" value=\"Login\" class=\"button\"></form>";
+	    print "<style type=\"text/css\">";
+	    print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+	    print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+	    print ".input {border: 1px solid #9372ED; background: #9372ED;}";
+	    print "</style></html></body></center>";
 	    
 	}
 	elsif ($boolean == 1){
-	    print "<html><body><center>";
-	    print "Sorry, that username is already taken!<br>";
-	    print "<form action=\"createAccount.pl.cgi\" method=POST>";
-	    print "<input type=\"submit\" value=\"New Account\"></form>";
-	    print "</html></body></center>";
+		print "<html><body><center>";
+		print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>";
+		print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
+		print "Sorry, that username is already taken!<br>";
+		print "<form action=\"createAccount.pl.cgi\" method=POST>";
+		print "<input type=\"submit\" value=\"New Account\" class=\"button\"></form>";
+		print "<style type=\"text/css\">";
+		print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+		print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+		print "</style></html></body></center>";
 	}
 	else{
-	    print "<html><body><center>";
-	    print "Sorry, the passwords didn't match!<br>";
-	    print "<form action=\"createAccount.pl.cgi\" method=POST>";
-	    print "<input type=\"submit\" value=\"New Account\"></form>";
-	    print "</html></body></center>";
+		print "<html><body><center>";
+		print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>";
+		print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
+		print "Sorry, the passwords didn't match!<br>";
+		print "<form action=\"createAccount.pl.cgi\" method=POST>";
+		print "<input type=\"submit\" value=\"New Account\" class=\"button\"></form>";
+		print "<style type=\"text/css\">";
+		print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+		print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+		print "</style></html></body></center>";
 	}
 }
