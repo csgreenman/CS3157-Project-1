@@ -2,6 +2,7 @@
 use Fcntl; #The Module
 use Digest::MD5 qw(md5 md5_hex md5_base64);
 use CGI 'param';
+use strict;
 
 print "content-type: text/html \n\n";
 
@@ -114,7 +115,7 @@ sub checkPassword{
 sub log{
 	my $string = shift;
 	open(FH, "activity.txt");
-	@file = <FH>;
+	my @file = <FH>;
 	push(@file,$string);
 	chomp(@file);
 		
