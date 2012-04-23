@@ -74,36 +74,59 @@ sub checkpass{
 		my $string = $ENV{REMOTE_ADDR} . " reset their password as user \"" . $user . "\" at " . localtime;
 		&log($string);
 
-		print "<html><body><center>Password changed!";
+		print "<html><body><center>";
+		print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>Password changed!";
+		print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
 		print "<form action=\"login.pl.cgi\" method=POST>";
-		print "<input type=\"submit\" value=\"Login\"></form>";
-		print "</html></body></center>";
+		print "<input type=\"submit\" value=\"Login\" class=\"button\"></form>";
+		print "<style type=\"text/css\">";
+		print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+		print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+		print ".input {border: 1px solid #9372ED; background: #9372ED;}";
+		print "</style></html></body></center>";
 	}
 	elsif ($boolean == 0){
-		print "<html><body><center>Sorry, incorrect password!";
+		print "<html><body><center>";
+		print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>Sorry, incorrect password!";
+		print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
 		print "<form action=\"resetPassword.pl.cgi\" method=POST>";
 		print "<input type=\"hidden\" value=$user name=\"user\">";
-		print "<input type=\"submit\" name=\"changepass\" value=\"Back\"></form>";
-		print "</html></body></center>";
+		print "<input type=\"submit\" name=\"changepass\" value=\"Back\" class=\"button\"></form>";
+		print "<style type=\"text/css\">";
+		print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+		print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+		print ".input {border: 1px solid #9372ED; background: #9372ED;}";
+		print "</style></html></body></center>";
 	}
 	else{
-		print "<html><body><center>Sorry, passwords did not match!";
+		print "<html><body><center>";
+		print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>Sorry, passwords did not match!";
+		print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
 		print "<form action=\"resetPassword.pl.cgi\" method=POST>";
 		print "<input type=\"hidden\" value=$user name=\"user\">";
-		print "<input type=\"submit\" name=\"changepass\" value=\"Back\"></form>";
-		print "</html></body></center>";	
+		print "<input type=\"submit\" name=\"changepass\" value=\"Back\" class=\"button\"></form>";
+		print "<style type=\"text/css\">";
+		print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+		print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+		print ".input {border: 1px solid #9372ED; background: #9372ED;}";
+		print "</style></html></body></center>";	
 	}
 }
 
 sub start{
 	print "<html><body><center>";
+	print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>";
+	print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
 	print "<form action=\"resetPassword.pl.cgi\" method=POST>Username: ";
-	print "<input type=\"text\" name=\"username\"><br><br>";
+	print "<input type=\"text\" name=\"username\" class=\"input\"><br><br>";
 	print "<input type=\"hidden\" value=$user name=\"user\">";
-	print "<input type=\"submit\" value=\"Submit\"></form>";
-	print "</html></body></center>";
+	print "<input type=\"submit\" value=\"Submit\" class=\"button\"></form>";
+	print "<style type=\"text/css\">";
+	print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+	print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+	print ".input {border: 1px solid #9372ED; background: #9372ED;}";
+	print "</style></html></body></center>";
 }
-
 sub checkValidUser{
 	my @in = split('&',$in);
 	my @value = split('=',$in[0]);
@@ -145,12 +168,17 @@ sub checkValidUser{
 		print "</center></body></html>";
 	}	
 	else{
-		print "<html><body><center>User not found!";
-		print "<form name=\"MyForm\" method=GET action=\"home.pl.cgi\">";
+		print "<html><body><center>";
+		print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>User not found!";
+		print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
+		print "<form name=\"MyForm\" method=POST action=\"home.pl.cgi\">";
 		print "<input type=\"hidden\" name=\"user\" value=\"$user\">";
 		print "<input type=\"hidden\" name=\"user\" value=\"$user\">";
-		print "<input type=\"submit\" value=\"Home\"></form>";
-		print "</html></body></center>";
+		print "<input type=\"submit\" value=\"Home\" class=\"button\"></form>";
+		print "<style type=\"text/css\">";
+		print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+		print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+		print "</style></html></body></center>";
 	}
 }
 
@@ -174,23 +202,34 @@ sub emailTempPass{
 	my $string = $ENV{REMOTE_ADDR} . " requested a password reset as user \"" . $user . "\" at " . localtime;
 	&log($string);
 
-	print "<html><body><center>New password sent to email!";
+	print "<html><body><center>";
+	print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>New password sent to email!";
+	print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
 	print "<form action=\"login.pl.cgi\" method=POST>";
-	print "<input type=\"submit\" value=\"Login\"></form>";
-	print "</html></body></center>";
+	print "<input type=\"submit\" value=\"Login\" class=\"button\"></form>";
+	print "<style type=\"text/css\">";
+	print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+	print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+	print "</style></html></body></center>";
 }
-
 
 sub changePassForm{
 	print "<html><body><center>";
+	print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>";
+	print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
 	print "<form action=\"resetPassword.pl.cgi\" method=POST>Old Password: ";
-	print "<input type=\"password\" name=\"oldPass\"><br><br>New Password: ";
-	print "<input type=\"password\" name=\"newPass\"><br><br>Confirm New Password: ";
-	print "<input type=\"password\" name=\"newPass1\"><br><br>";
+	print "<input type=\"password\" name=\"oldPass\" class=\"input\"><br><br>New Password: ";
+	print "<input type=\"password\" name=\"newPass\" class=\"input\"><br><br>Confirm New Password: ";
+	print "<input type=\"password\" name=\"newPass1\" class=\"input\"><br><br>";
 	print "<input type=\"hidden\" value=$user name=\"user\">";
-	print "<input type=\"submit\" value=\"Submit\"></form>";
-	print "</html></body></center>";
+	print "<input type=\"submit\" value=\"Submit\" class=\"button\"></form>";
+	print "<style type=\"text/css\">";
+	print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+	print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
+	print ".input {border: 1px solid #9372ED; background: #9372ED;}";
+	print "</style></html></body></center>";
 }
+
 
 sub randomString{
 	my @c = qw(q w e r t y u i o p a s d f g h j k l z x c v b n m 1 2 3 4 5 6 7 8 9 0);
