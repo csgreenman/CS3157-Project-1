@@ -2,11 +2,12 @@
 BEGIN { unshift @INC, "/home/csg2119/Perl_Modules/lib/perl/5.10.1" };
 
 use CGI::Carp qw(fatalsToBrowser);
-
 use Fcntl; #The Module
 use Digest::MD5 qw(md5 md5_hex md5_base64);
 use DBI;
 use DBD::SQLite;
+use IO::Handle;
+use strict;
 
 my $dbfile="salon.db";
 my $dbh = DBI->connect("DBI:SQLite:dbname=$dbfile", "", "") or die "Couldn't connect to database $!";
@@ -101,13 +102,14 @@ sub create{
 		print FILE "$_\n";
 	    }
 	    close FILE;
-	    
+
 	    open ( MAIL, "| /usr/lib/sendmail -t" );
 	    print MAIL "From: $email\n";
 	    print MAIL "To: $email\n";
 	    print MAIL "Subject: Welcome\n\n";
 	    print MAIL "Welcome to the reservation service!";
 	    close ( MAIL );
+
 	    
 	    $string = $ENV{REMOTE_ADDR} . " created a new account as user \"" . $user . "\" at " . localtime;
 	    open(FH, "activity.txt");
@@ -122,7 +124,7 @@ sub create{
 	    }
 	    close FILE;
 	    
-	    $newuserdata = "newuser" . "\*" . $user . " " . $email . " " . $firstname . " " . $lastname;	
+	    my $newuserdata = "newuser" . "\*" . $user . " " . $email . " " . $firstname . " " . $lastname;	
 	    
 	    print "<html><body><center>";
 	    print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>";
