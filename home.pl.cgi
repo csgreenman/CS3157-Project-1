@@ -2,6 +2,7 @@
 use Fcntl; #The Module
 use Digest::MD5 qw(md5 md5_hex md5_base64);
 use CGI 'param';
+use strict;
 
 print "content-type: text/html \n\n";
 
@@ -40,7 +41,7 @@ sub seeActivity{
 	my $user = $value[1];	
 
 	open(FH, "activity.txt");
-	@file = <FH>;
+	my @file = <FH>;
 	my @actions;
 	chomp(@file);
 	foreach (@file){
@@ -52,7 +53,7 @@ sub seeActivity{
 	}
 	chomp(@actions);
 
-	$string = $ENV{REMOTE_ADDR} . " viewed past activity as user \"" . $user . "\" at " . localtime;
+	my $string = $ENV{REMOTE_ADDR} . " viewed past activity as user \"" . $user . "\" at " . localtime;
 	&log($string);
 
 	print "<html><body><center>";
@@ -122,7 +123,7 @@ sub admin{
 sub log{
 	my $string = shift;
 	open(FH, "activity.txt");
-	@file = <FH>;
+	my @file = <FH>;
 	push(@file,$string);
 	chomp(@file);
 		
@@ -135,11 +136,11 @@ sub log{
 }
 
 sub printActivity{
-	$string = $ENV{REMOTE_ADDR} . " viewed all activity as \"admin\" at " . localtime;
+	my $string = $ENV{REMOTE_ADDR} . " viewed all activity as \"admin\" at " . localtime;
 	&log($string);
 	
 	open(FH, "activity.txt");
-	@file = <FH>;
+	my @file = <FH>;
 	chomp(@file);
 		
 	print "<html><body><center>";
