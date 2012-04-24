@@ -2,12 +2,11 @@
 BEGIN { unshift @INC, "/home/csg2119/Perl_Modules/lib/perl/5.10.1" };
 
 use CGI::Carp qw(fatalsToBrowser);
+
 use Fcntl; #The Module
 use Digest::MD5 qw(md5 md5_hex md5_base64);
 use DBI;
 use DBD::SQLite;
-use IO::Handle;
-use strict;
 
 my $dbfile="salon.db";
 my $dbh = DBI->connect("DBI:SQLite:dbname=$dbfile", "", "") or die "Couldn't connect to database $!";
@@ -102,14 +101,13 @@ sub create{
 		print FILE "$_\n";
 	    }
 	    close FILE;
-
+	    
 	    open ( MAIL, "| /usr/lib/sendmail -t" );
 	    print MAIL "From: $email\n";
 	    print MAIL "To: $email\n";
 	    print MAIL "Subject: Welcome\n\n";
 	    print MAIL "Welcome to the reservation service!";
 	    close ( MAIL );
-
 	    
 	    $string = $ENV{REMOTE_ADDR} . " created a new account as user \"" . $user . "\" at " . localtime;
 	    open(FH, "activity.txt");
@@ -124,19 +122,18 @@ sub create{
 	    }
 	    close FILE;
 	    
-	    my $newuserdata = "newuser" . "\*" . $user . " " . $email . " " . $firstname . " " . $lastname;	
+	    $newuserdata = "newuser" . "\*" . $user . " " . $email . " " . $firstname . " " . $lastname;	
 	    
 	    print "<html><body><center>";
 	    print "<font size=\"5\" face=\"trebuchet ms\" color=#9372ED>";
 	    print "<body style=\"background-attachment: fixed; background-position: bottom right; background-repeat: no-repeat;\" background=\"purpleflower.jpg\" bgcolor=\"black\">";
 	    print "Account successfully created!<br>";
-	    print "<form action=\"login.pl.cgi\" method=POST>";
-	    print "<input type=\"submit\" value=\"Login\" class=\"button\"></form>";
-	    print "<style type=\"text/css\">";
-	    print ".button {border: 1px solid #000000;background: #000000; color:#9372ED; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
-	    print ".button:hover {border: 1px solid #000000; background: #000000; color:#000000; font: bold large 'trebuchet ms',helvetica,sans-serif;}";
-	    print ".input {border: 1px solid #9372ED; background: #9372ED;}";
-	    print "</style></html></body></center>";
+	    print "Click <a href=\"login.pl.cgi\">here</a> to log in.";
+	    #print "<input type=\"hidden\" value=\"$newuserdata\" name=\"\"></form>";
+	    #print "<script type=\"text/javascript\" language=\"JavaScript\"><!--
+		#document.MyForm.submit();
+		#//--></script>";
+	    print "</html></body></center>";
 	    
 	}
 	elsif ($boolean == 1){
